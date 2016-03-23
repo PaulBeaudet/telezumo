@@ -1,7 +1,7 @@
 {
   "name": "telepresence",
   "version": "1.0.0",
-  "description": "serves a web page that allow control of a zumo telepresence robot",
+  "description": "serves a web page that allows the control of an Android enabled Zumo telepresence robot",
   "main": "serve.js",
   "scripts": {
     "test": "node serve.js",
@@ -9,7 +9,7 @@
     "start": "node serve.js"
   },
   "author": "Paul Beaudet",
-  "license": "AGPL-1.0",
+  "license": "MIT",
   "dependencies": {
     "bower": "1.5.3",
     "bcryptjs": "^2.3.0",

@@ -1,3 +1,5 @@
+// remote.js ~ Copyright 2016 Paul Beaudet ~ MIT License
+
 var control = {
     init: function(){
         $('#up').on('click', function(){sock.et.emit('remote', 'M8');});

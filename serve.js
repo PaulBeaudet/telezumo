@@ -1,3 +1,5 @@
+// serve.js ~ Copyright 2016 Paul Beaudet ~ MIT License
+
 var sock = {
     ets: require('socket.io'),
     listen: function(server){
