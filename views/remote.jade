@@ -1,0 +1,46 @@
+//-- chat.jade ~ Copyright 2015 Paul Beaudet
+extends ./header.jade
+
+block content
+    span#auth.hidden #{auth}
+    #topnav.navbar.navbar-inverse.navbar-static-top
+        .container
+            .navbar-header
+                button.navbar-toggle.text-info(type= "button", data-toggle= "collapse", data-target= ".navbar-collapse")
+                    span.glyphicon.glyphicon-menu-hamburger
+                a.navbar-brand#brand(href='/') telepresence
+            .navbar-collapse.collapse
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a#active do the things
+    .container#allViews
+        ul
+            li.view.tele
+                #top.row.text-center
+                    button#up.btn.btn-lg.btn-success ^
+                #middle.row.text-center
+                    button#right.btn.btn-lg.btn-success.pull-right ->
+                    button#stop.btn.btn-lg.btn-success X
+                    button#left.btn.btn-lg.btn-success.pull-left <-
+                #bottom.row.text-center
+                    button#down.btn.btn-lg.btn-success V
+                include textInput.jade
+            li.view.login
+                #signup.jumbotron
+                    h1 What's your bot cred?
+                    form(method='post')
+                        input(type='hidden', name="_csrf", value=csrfToken)
+                        .form-group
+                            label(for='usr') NAME
+                            input.form-control(type='text' maxlength='15', name='name', required='true')
+                        .form-group
+                            label(for='signupPassword', required='true')  Password
+                            input.form-control(type='password', name='password')
+                        if err
+                            p Taken name or wrong password, TO THE ABYSS! WOOSH! error= #{err}
+                        input#submit.btn.btn-lg.btn-success(type='submit', value='Ready to chat!')
+    // Javescript dependencies
+    script(src='bower_components/jquery/dist/jquery.min.js')
+    script(src='bower_components/socket.io-1.4.5/index.js')
+    script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(type='text/javascript', src='remote.js')

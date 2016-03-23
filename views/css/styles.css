@@ -1,0 +1,9 @@
+/* all views defualt to none*/
+.view {
+    display: none;
+}
+
+ul {
+  list-style: none;
+  word-wrap: break-word;
+}
