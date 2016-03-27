@@ -7,3 +7,10 @@ ul {
   list-style: none;
   word-wrap: break-word;
 }
+
+.booth{
+    width:400px;
+    background: #ccc;
+    border: solid 10px #ddd;
+    margin:0 auto;
+}

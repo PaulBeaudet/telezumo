@@ -16,6 +16,9 @@ block content
     .container#allViews
         ul
             li.view.tele
+                .jumbotron
+                    video#localVid(width='150', height='50', autoplay)
+                    video#remoteVid(width='150', height='50', autoplay)
                 #top.row.text-center
                     button#up.btn.btn-lg.btn-success ^
                 #middle.row.text-center
@@ -37,8 +40,8 @@ block content
                             label(for='signupPassword', required='true')  Password
                             input.form-control(type='password', name='password')
                         if err
-                            p Taken name or wrong password, TO THE ABYSS! WOOSH! error= #{err}
-                        input#submit.btn.btn-lg.btn-success(type='submit', value='Ready to chat!')
+                            p No I'm sorry no bot control for you error= #{err}
+                        input#submit.btn.btn-lg.btn-success(type='submit', value='Control the bot!')
     // Javescript dependencies
     script(src='bower_components/jquery/dist/jquery.min.js')
     script(src='bower_components/socket.io-1.4.5/index.js')

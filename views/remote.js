@@ -17,12 +17,25 @@ var sock = {
     }
 }
 
+var video = {
+    init: function(){
+        var vendorUrl = window.URL || window.webkitURL;
+        navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getMedia({video: true, audio: false,}, function(stream){
+            document.getElementById('video').src = vendorUrl.createObjectURL(stream);
+        }, function(err){
+            $('#textEntry').val(err);
+        });
+    }
+}
+
 var pages = {
     init: function(){
         if($('#auth').text() === 'true'){
             $('.tele.view').show();
             sock.init();
             control.init();
+            video.init();
         } else {
             $('.login.view').show();
         }
