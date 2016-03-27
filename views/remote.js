@@ -22,7 +22,7 @@ var video = {
         var vendorUrl = window.URL || window.webkitURL;
         navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.getMedia({video: true, audio: false,}, function(stream){
-            document.getElementById('video').src = vendorUrl.createObjectURL(stream);
+            document.getElementById('localVid').src = vendorUrl.createObjectURL(stream);
         }, function(err){
             $('#textEntry').val(err);
         });
