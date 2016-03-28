@@ -2,10 +2,11 @@
 
 var control = {
     init: function(){
-        $('#up').on('click', function(){sock.et.emit('remote', 'M8');});
-        $('#down').on('click', function(){sock.et.emit('remote', 'M2');});
-        $('#left').on('click', function(){sock.et.emit('remote', 'M4');});
-        $('#right').on('click', function(){sock.et.emit('remote', 'M6');});
+        $('#up').mousedown(function(){sock.et.emit('remote', 'M8');});
+        $('#down').mousedown(function(){sock.et.emit('remote', 'M2');});
+        $('#left').mousedown(function(){sock.et.emit('remote', 'M4');});
+        $('#right').mousedown(function(){sock.et.emit('remote', 'M6');});
+        $('.tele').mouseup(function(){sock.et.emit('remote', 'M5');})
         $('#stop').on('click', function(){sock.et.emit('remote', 'M5');});
     }
 }
