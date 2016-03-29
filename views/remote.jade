@@ -20,13 +20,23 @@ block content
                     video#localVid(width='150', height='50', autoplay)
                     video#remoteVid(width='150', height='50', autoplay)
                 #top.row.text-center
+                    button#fwdLeft.up.btn.btn-lg.btn-success.pull-left <@
                     button#up.btn.btn-lg.btn-success ^
+                    button#fwdRight.btn.btn-lg.btn-success.pull-right @>
                 #middle.row.text-center
-                    button#right.btn.btn-lg.btn-success.pull-right ->
-                    button#stop.btn.btn-lg.btn-success X
                     button#left.btn.btn-lg.btn-success.pull-left <-
+                    button#stop.btn.btn-lg.btn-success X
+                    button#right.btn.btn-lg.btn-success.pull-right ->
                 #bottom.row.text-center
+                    button#rvsLeft.up.btn.btn-lg.btn-success.pull-left <@
                     button#down.btn.btn-lg.btn-success V
+                    button#rvsRight.btn.btn-lg.btn-success.pull-right @>
+                #bottom.row.text-center
+                    span Speed ->
+                    button#speed1.speed.btn.btn-lg.btn-info 1
+                    button#speed2.speed.btn.btn-lg.btn-info 2
+                    button#speed3.speed.btn.btn-lg.btn-info 3
+                    button#speed4.speed.btn.btn-lg.btn-info 4
                 include textInput.jade
             li.view.login
                 #signup.jumbotron

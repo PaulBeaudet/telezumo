@@ -2,12 +2,21 @@
 
 var control = {
     init: function(){
-        $('#up').mousedown(function(){sock.et.emit('remote', 'M8');});
+        $('#rvsLeft').mousedown(function(){sock.et.emit('remote', 'M1');});
         $('#down').mousedown(function(){sock.et.emit('remote', 'M2');});
+        $('#rvsRight').mousedown(function(){sock.et.emit('remote', 'M3');});
         $('#left').mousedown(function(){sock.et.emit('remote', 'M4');});
-        $('#right').mousedown(function(){sock.et.emit('remote', 'M6');});
         $('.tele').mouseup(function(){sock.et.emit('remote', 'M5');})
         $('#stop').on('click', function(){sock.et.emit('remote', 'M5');});
+        $('#right').mousedown(function(){sock.et.emit('remote', 'M6');});
+        $('#fwdLeft').mousedown(function(){sock.et.emit('remote', 'M7');});
+        $('#up').mousedown(function(){sock.et.emit('remote', 'M8');});
+        $('#fwdRight').mousedown(function(){sock.et.emit('remote', 'M9');});
+        // speed buttons
+        $('#speed1').on('click', function(){sock.et.emit('remote', 'S1');});
+        $('#speed2').on('click', function(){sock.et.emit('remote', 'S2');});
+        $('#speed3').on('click', function(){sock.et.emit('remote', 'S3');});
+        $('#speed4').on('click', function(){sock.et.emit('remote', 'S4');});
     }
 }
 
