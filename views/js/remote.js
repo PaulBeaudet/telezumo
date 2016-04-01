@@ -1,7 +1,7 @@
 // remote.js ~ Copyright 2016 Paul Beaudet ~ MIT License
 
 // simplified adapter.js shims for webRTC browser differances
-navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+navigator.getUserMedia = navigator.getUserMedia || navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
 window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
 window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
@@ -49,7 +49,7 @@ var signal = {
             } // else a null means we have finished finding ice canidates in which there
         };    // in which there may be multiple of for any given client
         signal.peer.onaddstream = video.remoteStream;
-        signal.peer.addStream(video.stream);
+        //signal.peer.addStream(video.stream);
         if(amIfirst) { signal.peer.createOffer(signal.onSession, utils.error);}
     },
     recepient: function(info, type){
