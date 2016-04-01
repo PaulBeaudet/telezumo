@@ -45,7 +45,7 @@ var signal = {
         signal.peer = new window.RTCPeerConnection({ 'iceServers': [{'url': 'stun:stun.l.google.com:19302'}] });
         signal.peer.onicecandidate = function (event) { // send any ice candidates to the other peer
             if (event.candidate != null) {
-                sock.et.emit('ice', event.candidate);
+                sock.et.emit('ice', JSON.stringify(event.candidate));
             } // else a null means we have finished finding ice canidates in which there
         };    // in which there may be multiple of for any given client
         signal.peer.onaddstream = video.remoteStream;
@@ -54,17 +54,18 @@ var signal = {
     },
     recepient: function(info, type){
         if(!signal.peer){signal.peerConnect(false);} // start peer connection if someone is calling
+        if(!signal.peer){signal.peerConnect(false);} // start peer connection if someone is calling
         if(type === 'ice'){
-            signal.peer.addIceCandidate(new window.RTCIceCandidate(info.ice));
+            signal.peer.addIceCandidate(new window.RTCIceCandidate(JSON.parse(info)));
         } else {
-            signal.peer.setRemoteDescription(new window.RTCSessionDescription(info.sdp), function(){
+            signal.peer.setRemoteDescription(new window.RTCSessionDescription(JSON.parse(info)), function(){
                 signal.peer.createAnswer(signal.onSession, utils.error);
-            });
+            }, utils.error);
         }
     },
     onSession: function(info){
         signal.peer.setLocalDescription(info, function(){
-            sock.et.emit('sdp', signal.peer.localDescription); // send discription of connection type
+            sock.et.emit('sdp', JSON.stringify(signal.peer.localDescription)); // send discription of connection type
         }, utils.error);
     },
 }
@@ -83,7 +84,10 @@ var video = {
 }
 
 var utils = {
-    error: function(err){$('#err').text('error:' + err);}
+    error: function(err){
+        console.log(err);
+        $('#err').text('error:' + err);
+    }
 }
 
 var pages = {

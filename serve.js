@@ -6,8 +6,8 @@ var sock = {
         sock.ets = sock.ets(server);
         sock.ets.on('connection', function(socket){
             socket.on('remote', function(data){sock.ets.emit('remote', data);});
-            socket.on('sdp', function(info){sock.ets.emit('sdp', info);}); // relay video type
-            socket.on('ice', function(info){sock.ets.emit('ice', info);}); // relay ip address
+            socket.on('sdp', function(info){socket.broadcast.emit('sdp', info);}); // relay video type
+            socket.on('ice', function(info){socket.broadcast.emit('ice', info);}); // relay ip address
         });
     }
 }
