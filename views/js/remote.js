@@ -1,12 +1,11 @@
 // remote.js ~ Copyright 2016 Paul Beaudet ~ MIT License
 
-var rtc = { // simplified adapter.js shim for webRTC browser differances
-    getUserMedia: navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia,
-    peerConnection: window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection,
-    iceCandidate: window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate,
-    sessionInfo: window.RTCSessionDescription || window.mozRTCSessionDescription ||   window.webkitRTCSessionDescription,
-    url: window.URL || window.webkitURL, // for attaching video urls as source discriptions
-}
+// simplified adapter.js shims for webRTC browser differances
+navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
+window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
+window.URL = window.URL || window.webkitURL;
 
 var control = {
     init: function(){
@@ -43,7 +42,7 @@ var sock = {
 var signal = {
     peer: null,
     peerConnect: function(amIfirst){
-        signal.peer = new rtc.peerConnection({ 'iceServers': [{'url': 'stun:stun.l.google.com:19302'}] });
+        signal.peer = new window.RTCPeerConnection({ 'iceServers': [{'url': 'stun:stun.l.google.com:19302'}] });
         signal.peer.onicecandidate = function (event) { // send any ice candidates to the other peer
             if (event.candidate != null) {
                 sock.et.emit('ice', event.candidate);
@@ -56,9 +55,9 @@ var signal = {
     recepient: function(info, type){
         if(!signal.peer){signal.peerConnect(false);} // start peer connection if someone is calling
         if(type === 'ice'){
-            signal.peer.addIceCandidate(new rtc.iceCandidate(info.ice));
+            signal.peer.addIceCandidate(new window.RTCIceCandidate(info.ice));
         } else {
-            signal.peer.setRemoteDescription(new rtc.sessionInfo(info.sdp), function(){
+            signal.peer.setRemoteDescription(new window.RTCSessionDescription(info.sdp), function(){
                 signal.peer.createAnswer(signal.onSession, utils.error);
             });
         }
@@ -73,18 +72,18 @@ var signal = {
 var video = {
     stream: null,
     init: function(){
-        rtc.getUserMedia({video: true, audio: false,}, function(stream){
+        navigator.getUserMedia({video: true, audio: false,}, function(stream){
             video.stream = stream;
-            // document.getElementById('localVid').src = rtc.url.createObjectURL(stream);
+            // document.getElementById('localVid').src = window.URL.createObjectURL(stream);
         }, utils.error);
     },
     remoteStream: function(event){
-        document.getElementById('remoteVid').src = rtc.url.createObjectURL(event.stream);
+        document.getElementById('remoteVid').src = window.URL.createObjectURL(event.stream);
     }
 }
 
 var utils = {
-    error: function(err){$('#err').text('error:'+err);}
+    error: function(err){$('#err').text('error:' + err;)};
 }
 
 var pages = {
