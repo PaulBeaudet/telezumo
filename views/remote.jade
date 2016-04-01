@@ -31,13 +31,20 @@ block content
                     button#rvsLeft.up.btn.btn-lg.btn-success.pull-left <@
                     button#down.btn.btn-lg.btn-success V
                     button#rvsRight.btn.btn-lg.btn-success.pull-right @>
-                #bottom.row.text-center
+                #adjust.row.text-center
                     span Speed ->
                     button#speed1.speed.btn.btn-lg.btn-info 1
                     button#speed2.speed.btn.btn-lg.btn-info 2
                     button#speed3.speed.btn.btn-lg.btn-info 3
                     button#speed4.speed.btn.btn-lg.btn-info 4
-                include textInput.jade
+                    button#videoBTN.btn.btn-lg.btn-success video
+                #infoBar.row.text-center
+                    .col-xs-4
+                        span#botURL
+                    .col-xs-4
+                        span#sensors
+                    .col-xs-4
+                        span#err
             li.view.login
                 #signup.jumbotron
                     h1 What's your bot cred?
@@ -53,7 +60,8 @@ block content
                             p No I'm sorry no bot control for you error= #{err}
                         input#submit.btn.btn-lg.btn-success(type='submit', value='Control the bot!')
     // Javescript dependencies
-    script(src='bower_components/jquery/dist/jquery.min.js')
-    script(src='bower_components/socket.io-client/socket.io.js')
-    script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
-    script(type='text/javascript', src='remote.js')
+    script(type='text/javascript', src='bower_components/jquery/dist/jquery.min.js')
+    script(type='text/javascript', src='bower_components/socket.io-client/socket.io.js')
+    script(type='text/javascript', src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    // script(type='text/javascript', src='js/webRTC.js') // adapter.js refactor, remove rtc object before reincluding
+    script(type='text/javascript', src='js/remote.js')
