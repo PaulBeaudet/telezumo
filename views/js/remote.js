@@ -83,7 +83,7 @@ var video = {
 }
 
 var utils = {
-    error: function(err){$('#err').text('error:' + err);};
+    error: function(err){$('#err').text('error:' + err);}
 }
 
 var pages = {
