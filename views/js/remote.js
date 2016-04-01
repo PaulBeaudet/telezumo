@@ -75,7 +75,7 @@ var video = {
     init: function(){
         rtc.getUserMedia({video: true, audio: false,}, function(stream){
             video.stream = stream;
-            document.getElementById('localVid').src = rtc.url.createObjectURL(stream);
+            // document.getElementById('localVid').src = rtc.url.createObjectURL(stream);
         }, utils.error);
     },
     remoteStream: function(event){
@@ -91,7 +91,6 @@ var pages = {
     init: function(){
         if($('#auth').text() === 'true'){
             $('.tele.view').show();
-            rtc.init();     // init rtc adapter
             sock.init();    // start socket connections
             control.init();
             video.init();
