@@ -5,9 +5,10 @@ var sock = {
     listen: function(server){
         sock.ets = sock.ets(server);
         sock.ets.on('connection', function(socket){
-            socket.on('remote', function(data){sock.ets.emit('remote', data);});
-            socket.on('sdp', function(info){socket.broadcast.emit('sdp', info);}); // relay video type
-            socket.on('ice', function(info){socket.broadcast.emit('ice', info);}); // relay ip address
+            socket.on('data', function(data){socket.broadcast.emit('data', data);}); // relay sensor data
+            socket.on('remote', function(data){sock.ets.emit('remote', data);});     // relay control data
+            socket.on('sdp', function(info){socket.broadcast.emit('sdp', info);});   // relay video type
+            socket.on('ice', function(info){socket.broadcast.emit('ice', info);});   // relay ip address
         });
     }
 }

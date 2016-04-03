@@ -33,9 +33,8 @@ var sock = {
     first: null,
     init: function(){
         sock.et.on('data', function(info){$('#sensors').text(info);});
-        // Signaling reactions
-        sock.et.on('ice', function(info){signal.recepient(info, 'ice');});
-        sock.et.on('sdp', function(info){signal.recepient(info, 'sdp');});
+        sock.et.on('ice', function(info){signal.recepient(info, 'ice');}); // get ip info
+        sock.et.on('sdp', function(info){signal.recepient(info, 'sdp');}); // get audeo video info
     },
 }
 
@@ -43,24 +42,21 @@ var signal = {
     peer: null,
     peerConnect: function(amIfirst){
         signal.peer = new window.RTCPeerConnection({ 'iceServers': [{'url': 'stun:stun.l.google.com:19302'}] });
-        signal.peer.onicecandidate = function (event) { // send any ice candidates to the other peer
-            if (event.candidate != null) {
-                sock.et.emit('ice', JSON.stringify(event.candidate));
-            } // else a null means we have finished finding ice canidates in which there
-        };    // in which there may be multiple of for any given client
-        signal.peer.onaddstream = video.remoteStream;
-        if(video.stream){signal.peer.addStream(video.stream);}
-        if(amIfirst) { signal.peer.createOffer(signal.onSession, utils.error);}
+        signal.peer.onicecandidate = function (event) { // on address info being introspected from external "stun" server
+            if (event.candidate != null) { sock.et.emit('ice', JSON.stringify(event.candidate)); }
+        }; // null === finished finding info to describe ones own address, ie "canidate" address paths
+        signal.peer.onaddstream = video.remoteStream;  // display remote video stream when it comes in
+        signal.peer.addStream(video.stream);           // make our video stream sharable
+        if(amIfirst){ signal.peer.createOffer(signal.onSession, utils.error);}
     },
     recepient: function(info, type){
         if(!signal.peer){signal.peerConnect(false);} // start peer connection if someone is calling
-        if(!signal.peer){signal.peerConnect(false);} // start peer connection if someone is calling
-        if(type === 'ice'){
-            signal.peer.addIceCandidate(new window.RTCIceCandidate(JSON.parse(info)));
-        } else {
+        if(type === 'ice'){                          // given adress info from remote is being handled
+            signal.peer.addIceCandidate(new window.RTCIceCandidate(JSON.parse(info))); // add address info
+        } else { // otherwise we are getting signal type data i.e. audeo video codec description
             signal.peer.setRemoteDescription(new window.RTCSessionDescription(JSON.parse(info)), function(){
                 signal.peer.createAnswer(signal.onSession, utils.error);
-            }, utils.error);
+            }, utils.error); // try to find common ground on codecs
         }
     },
     onSession: function(info){
@@ -73,9 +69,8 @@ var signal = {
 var video = {
     stream: null,
     init: function(){
-        navigator.getUserMedia({video: true, audio: false,}, function(stream){
+        navigator.getUserMedia({video: true, audio: true,}, function(stream){
             video.stream = stream;
-            if(video.stream){document.getElementById('localVid').src = window.URL.createObjectURL(stream);}
         }, utils.error);
     },
     remoteStream: function(event){

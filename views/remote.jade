@@ -17,8 +17,7 @@ block content
         ul
             li.view.tele
                 .row
-                    video#localVid(width='150', height='150', autoplay)
-                    video#remoteVid(width='150', height='150', autoplay)
+                    video#remoteVid(width='100%', height='200', autoplay)
                 #top.row.text-center
                     button#fwdLeft.up.btn.btn-lg.btn-success.pull-left <@
                     button#up.btn.btn-lg.btn-success ^
@@ -39,11 +38,9 @@ block content
                     button#speed4.speed.btn.btn-lg.btn-info 4
                     button#videoBTN.btn.btn-lg.btn-success video
                 #infoBar.row.text-center
-                    .col-xs-4
-                        span#botURL
-                    .col-xs-4
+                    .col-xs-6
                         span#sensors
-                    .col-xs-4
+                    .col-xs-6
                         span#err
             li.view.login
                 #signup.jumbotron
@@ -63,5 +60,4 @@ block content
     script(type='text/javascript', src='bower_components/jquery/dist/jquery.min.js')
     script(type='text/javascript', src='bower_components/socket.io-client/socket.io.js')
     script(type='text/javascript', src='bower_components/bootstrap/dist/js/bootstrap.min.js')
-    // script(type='text/javascript', src='js/webRTC.js') // adapter.js refactor, remove rtc object before reincluding
     script(type='text/javascript', src='js/remote.js')
