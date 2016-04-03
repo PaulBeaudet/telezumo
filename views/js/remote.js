@@ -9,16 +9,16 @@ window.URL = window.URL || window.webkitURL;
 
 var control = {
     init: function(){
-        $('#rvsLeft').mousedown(function(){sock.et.emit('remote', 'M1');});
-        $('#down').mousedown(function(){sock.et.emit('remote', 'M2');});
-        $('#rvsRight').mousedown(function(){sock.et.emit('remote', 'M3');});
-        $('#left').mousedown(function(){sock.et.emit('remote', 'M4');});
-        $('.tele').mouseup(function(){sock.et.emit('remote', 'M5');})
+        $('#rvsLeft').on('mousedown touchstart', function(){sock.et.emit('remote', 'M1');});
+        $('#down').on('mousedown touchstart', function(){sock.et.emit('remote', 'M2');});
+        $('#rvsRight').on('mousedown touchstart', function(){sock.et.emit('remote', 'M3');});
+        $('#left').on('mousedown touchstart', function(){sock.et.emit('remote', 'M4');});
+        $('.tele').on('mouseup touchend', function(){sock.et.emit('remote', 'M5');})
         $('#stop').on('click', function(){sock.et.emit('remote', 'M5');});
-        $('#right').mousedown(function(){sock.et.emit('remote', 'M6');});
-        $('#fwdLeft').mousedown(function(){sock.et.emit('remote', 'M7');});
-        $('#up').mousedown(function(){sock.et.emit('remote', 'M8');});
-        $('#fwdRight').mousedown(function(){sock.et.emit('remote', 'M9');});
+        $('#right').on('mousedown touchstart', function(){sock.et.emit('remote', 'M6');});
+        $('#fwdLeft').on('mousedown touchstart', function(){sock.et.emit('remote', 'M7');});
+        $('#up').on('mousedown touchstart', function(){sock.et.emit('remote', 'M8');});
+        $('#fwdRight').on('mousedown touchstart', function(){sock.et.emit('remote', 'M9');});
         // speed buttons
         $('#speed1').on('click', function(){sock.et.emit('remote', 'S1');});
         $('#speed2').on('click', function(){sock.et.emit('remote', 'S2');});
