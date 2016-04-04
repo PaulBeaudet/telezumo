@@ -111,6 +111,7 @@ var sock = {
 
 var pages = {
     userType: false,
+    bots: [],
     init: function(){
         pages.userType = $('#auth').text();
         if(pages.userType === 'false'){
@@ -123,12 +124,16 @@ var pages = {
         }
     },
     list: function(bot){           // adds bot status to a list of buttons when they call us
-        var id = '#' + bot.id;
-        if(!$(id)){      // given no button exist add one
-            $('#bots').append('<li><button id='+bot.id+' class="btn btn-lg btn-success></button></li>');
-        }                          // add bot control button
-        if(bot.status === 'open'){ // in the case robot is free to be controled
-            $(id).text('bot available!');                         // button text: show availbility
+        var index = pages.bots.indexOf(bot.id);
+        var id = 0;
+        if(index === -1){            // given no bot of this id exist yet add one
+            pages.bots.push(bot.id); // add new bot to personal list of bots
+            index = pages.bots.indexOf(bot.id); // find index of new bot in list
+            id = 'bot' + index;                 // create bot id based on list number
+            $('#bots').append('<li><button id='+id+' class="btn btn-lg btn-success></button></li>');
+        } else {id = 'bot' + index;}                                    // already have a button for this bot
+        if(bot.status === 'open'){                                      // case robot is free to be controled
+            $(id).text(id+':bot available!');                           // button text: show availbility
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
             control.remove(bot.id);                        // offline for master? remove control
@@ -136,9 +141,10 @@ var pages = {
             if(pages.userType = 'admin'){                  // if admin
                 $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
             }
-            $(id).text('in use');                          // either case show robots in use
+            $(id).text(id+':in use');                      // either case show robots in use
         } else if(bot.status === 'offline'){               // case robot has disconnected
             control.remove(bot.id);                        // offline for master? remove control
+            pages.bots.splice(index, 1);                   // remove this bot from our list of bots
             $(id).off().text('offline');                   // show as offline for a brief time
             setTimeout(function(){$(id).remove();}, 5000); // remove bot from list entirely when offline
         }
