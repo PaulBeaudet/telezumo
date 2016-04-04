@@ -123,7 +123,7 @@ var pages = {
         }
     },
     list: function(bot){           // adds bot status to a list of buttons when they call us
-        if(!$('#'.bot.id)){        // given no button exist add one
+        if(!$('#' + bot.id)){      // given no button exist add one
             $('#bots').append('<li><button id='+bot.id+' class="btn btn-lg btn-success></button></li>');
         }                          // add bot control button
         if(bot.status === 'open'){ // in the case robot is free to be controled
