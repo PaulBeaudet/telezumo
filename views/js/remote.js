@@ -101,7 +101,7 @@ var sock = {
         sock.et.on('here', pages.list);                                    // list available bots when they call
     },
     send: function(type, nfo){
-        if(control.bot){sock.et.emit(type, {to:control.bot, nfo:data});}
+        if(control.bot){sock.et.emit(type, {to:control.bot, data:nfo});}
     }
 }
 
