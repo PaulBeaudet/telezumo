@@ -131,14 +131,15 @@ var pages = {
             index = pages.bots.indexOf(bot.id); // find index of new bot in list
             id = 'bot' + index;                 // create bot id based on list number
             console.log('creating button?');
-            var button = $('<button/>').attr({
-                id: id,
-                class: "btn btn-lg btn-success"
+            var button = $('<button/>').attr({            // create a new button element with attributes
+                id: id,                                   // attach id of button EG bot0, bot1
+                class: "btn btn-lg btn-success"           // bootstrap classes for looks sake
             });
             $('#bots').append(button);                    // attach button to page
-        } else {id = 'bot' + index;}                      // already have a button for this bot
+        }
+        id = '#bot' + index;
         if(bot.status === 'open'){                        // case robot is free to be controled
-            $(id).text(id+':bot available!');             // button text: show availbility
+            $(id).text(id+': available!');             // button text: show availbility
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
             control.remove(bot.id);                        // offline for master? remove control
