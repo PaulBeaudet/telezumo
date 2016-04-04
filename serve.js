@@ -5,22 +5,36 @@ var sock = {
     listen: function(server){
         sock.ets = sock.ets(server);
         sock.ets.on('connection', function(socket){
+            var bot = false; // is this a bot or a controlor?
+            socket.on('botFind', function(){socket.broadcast.emit('botFind', socket.id);});// broadcast to available bots
+            socket.on('here', function(nfo){
+                bot = true; // only bots say 'here'
+                if(nfo.id){sock.ets.to(nfo.id).emit('here', {id:socket.id, status: nfo.status});}
+                else{socket.broadcast('here', {id:socket.id, status: nfo.status});}
+            }); // show available
+            socket.on('own', function(bot){sock.ets.to(bot, socket.id);});           // take control of a bot
             socket.on('data', function(data){socket.broadcast.emit('data', data);}); // relay sensor data
             socket.on('remote', function(data){sock.ets.emit('remote', data);});     // relay control data
             socket.on('sdp', function(info){socket.broadcast.emit('sdp', info);});   // relay video type
             socket.on('ice', function(info){socket.broadcast.emit('ice', info);});   // relay ip address
+            socket.on('disconnect', function(){
+                if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
+            });
         });
     }
 }
 
 var routes = {
-    slash: function(req, res){res.render('remote', {csrfToken: req.csrfToken()});},
+    slash: function(req, res){res.render('remote', {csrfToken: req.csrfToken(), auth: 'false'});},
     signin: function(req, res){
         if(req.body.name === process.env.NAME && req.body.password === process.env.PASSWORD){
-            res.render('remote', {csrfToken: req.csrfToken(), auth: true});
+            res.render('remote', {csrfToken: req.csrfToken(), auth: 'admin'});
         } else {
             res.render('remote', {csrfToken: req.csrfToken(), err: 'wrong!'});
         }
+    },
+    control: function(req, res){
+        res.render('remote', {csrfToken: req.csrfToken(), auth: 'temp'});
     }
 }
 
@@ -50,7 +64,8 @@ var serve = {
         app.use(serve.express.static(__dirname + '/views')); // serve page dependancies (sockets, jquery, bootstrap)
         var router = serve.express.Router();                 // create express router object to add routing events to
         router.get('/', routes.slash);                       // main route for getting in
-        router.post('/', routes.signin);                     // authenticate our one person
+        router.post('/', routes.signin);                     // authenticate admin
+        router.get('/control', routes.control);              // allow people to control the zumo
         app.use(router);                                     // get express to user the routes we set
         sock.listen(http);                                   // listen for socket connections
         http.listen(process.env.PORT);                       // listen on specified PORT enviornment variable
