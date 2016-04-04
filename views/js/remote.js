@@ -123,23 +123,24 @@ var pages = {
         }
     },
     list: function(bot){           // adds bot status to a list of buttons when they call us
-        if(!$('#' + bot.id)){      // given no button exist add one
+        var id = '#' + bot.id;
+        if(!$(id)){      // given no button exist add one
             $('#bots').append('<li><button id='+bot.id+' class="btn btn-lg btn-success></button></li>');
         }                          // add bot control button
         if(bot.status === 'open'){ // in the case robot is free to be controled
-            $('#'+bot.id).text('bot available!');                         // button text: show availbility
-            $('#'+bot.id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
+            $(id).text('bot available!');                         // button text: show availbility
+            $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
-            control.remove(bot.id);                           // offline for master? remove control
-            $('#'+bot.id).off();                              // remove control click event for temp
-            if(pages.userType = 'admin'){                     // if admin
-                $('#'+bot.id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
+            control.remove(bot.id);                        // offline for master? remove control
+            $(id).off();                                   // remove control click event for temp
+            if(pages.userType = 'admin'){                  // if admin
+                $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
             }
-            $('#'+bot.id).text('in use');                     // either case show robots in use
-        } else if(bot.status === 'offline'){                  // case robot has disconnected
-            control.remove(bot.id);                                // offline for master? remove control
-            $('#'+bot.id).off().text('offline');                   // show as offline for a brief time
-            setTimeout(function(){$('#'+bot.id).remove();}, 5000); // remove bot from list entirely when offline
+            $(id).text('in use');                          // either case show robots in use
+        } else if(bot.status === 'offline'){               // case robot has disconnected
+            control.remove(bot.id);                        // offline for master? remove control
+            $(id).off().text('offline');                   // show as offline for a brief time
+            setTimeout(function(){$(id).remove();}, 5000); // remove bot from list entirely when offline
         }
     }
 }
