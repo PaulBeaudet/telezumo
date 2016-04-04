@@ -7,33 +7,27 @@ var control = {
         if(pages.userType === 'temp'){$('.view').hide();} // hide find bots if this is a temp user
         $('.tele.view').show();                           // show telepresence view
         sock.et.emit('own', control.bot);                 // send control command to bot
-        sock.control();                                   // create socket event listeners for robot feedback
         video.init();                                     // try to get user media and start video telepresence
-        $('#rvsLeft').on('mousedown touchstart', function(){control.remote('M1');});
-        $('#down').on('mousedown touchstart', function(){control.remote('M2');});
-        $('#rvsRight').on('mousedown touchstart', function(){control.remote('M3');});
-        $('#left').on('mousedown touchstart', function(){control.remote('M4');});
-        $('.tele').on('mouseup touchend', function(){control.remote('M5');});
-        $('#stop').on('click', function(){control.remote('M5');});
-        $('#right').on('mousedown touchstart', function(){control.remote('M6');});
-        $('#fwdLeft').on('mousedown touchstart', function(){control.remote('M7');});
-        $('#up').on('mousedown touchstart', function(){control.remote('M8');});
-        $('#fwdRight').on('mousedown touchstart', function(){control.remote('M9');});
+        $('#rvsLeft').on('mousedown touchstart', function(){sock.send('remote', 'M1');});
+        $('#down').on('mousedown touchstart', function(){sock.send('remote', 'M2');});
+        $('#rvsRight').on('mousedown touchstart', function(){sock.send('remote', 'M3');});
+        $('#left').on('mousedown touchstart', function(){sock.send('remote', 'M4');});
+        $('.tele').on('mouseup touchend', function(){sock.send('remote', 'M5');});
+        $('#stop').on('click', function(){sock.send('remote', 'M5');});
+        $('#right').on('mousedown touchstart', function(){sock.send('remote', 'M6');});
+        $('#fwdLeft').on('mousedown touchstart', function(){sock.send('remote', 'M7');});
+        $('#up').on('mousedown touchstart', function(){sock.send('remote', 'M8');});
+        $('#fwdRight').on('mousedown touchstart', function(){sock.send('remote', 'M9');});
         // speed buttons
-        $('#speed1').on('click', function(){control.remote('S1');});
-        $('#speed2').on('click', function(){control.remote('S2');});
-        $('#speed3').on('click', function(){control.remote('S3');});
-        $('#speed4').on('click', function(){control.remote('S4');});
+        $('#speed1').on('click', function(){sock.send('remote', 'S1');});
+        $('#speed2').on('click', function(){sock.send('remote', 'S2');});
+        $('#speed3').on('click', function(){sock.send('remote', 'S3');});
+        $('#speed4').on('click', function(){sock.send('remote', 'S4');});
         $('#videoBTN').on('click', function(){signal.peerConnect(true);});
         $('#disconnect').on('click', control.disconnect);
     },
-    remote: function(command){
-        sock.et.emit('remote', {id: control.bot, cmd:command});
-    },
-    revoke: function(id){
-        if(id === control.bot){        // we talking about robot this user is controlling?
-            control.disconnect;        // remove control of robot
-        }
+    revoke: function(id){          // externally driven disconnect event
+        if(id === control.bot){control.disconnect();}
     },
     disconnect: function(){
         control.bot = null;        // remove the id
@@ -54,7 +48,7 @@ var signal = {
     peerConnect: function(amIfirst){
         signal.peer = new window.RTCPeerConnection({ 'iceServers': [{'url': 'stun:stun.l.google.com:19302'}] });
         signal.peer.onicecandidate = function (event) { // on address info being introspected from external "stun" server
-            if (event.candidate != null) { sock.et.emit('ice', JSON.stringify(event.candidate)); }
+            if (event.candidate != null) { sock.send('ice', JSON.stringify(event.candidate)); }
         }; // null === finished finding info to describe ones own address, ie "canidate" address paths
         signal.peer.onaddstream = video.remoteStream;  // display remote video stream when it comes in
         signal.peer.addStream(video.stream);           // make our video stream sharable
@@ -72,7 +66,7 @@ var signal = {
     },
     onSession: function(info){
         signal.peer.setLocalDescription(info, function(){
-            sock.et.emit('sdp', JSON.stringify(signal.peer.localDescription)); // send discription of connection type
+            sock.send('sdp', JSON.stringify(signal.peer.localDescription)); // send discription of connection type
         }, utils.error);
     },
 }
@@ -84,10 +78,7 @@ var video = {
             navigator.getUserMedia({video: true, audio: true,}, function(stream){
                 video.stream = stream;
             }, utils.error);
-        } else {
-            utils.error('telepresence not supported in this browser');
-        }
-
+        } else { utils.error('telepresence not supported in this browser'); }
     },
     remoteStream: function(event){
         document.getElementById('remoteVid').src = window.URL.createObjectURL(event.stream);
@@ -103,11 +94,14 @@ var utils = {
 
 var sock = {
     et: io(),
-    first: null,
     control: function(){
         sock.et.on('data', function(info){$('#sensors').text(info);});
         sock.et.on('ice', function(info){signal.recepient(info, 'ice');}); // get ip info
         sock.et.on('sdp', function(info){signal.recepient(info, 'sdp');}); // get audeo video info
+        sock.et.on('here', pages.list);                                    // list available bots when they call
+    },
+    send: function(type, nfo){
+        if(control.bot){sock.et.emit(type, {to:control.bot, nfo:data});}
     }
 }
 
@@ -119,8 +113,8 @@ var pages = {
         if(pages.userType === 'false'){
             $('.login.view').show();
         } else {
+            sock.control();                                                   // create socket on listen events
             $('.find.view').show();                                           // show bot list view
-            sock.et.on('here', pages.list);                                   // list available bots when they call
             sock.et.emit('botFind');                                          // call for intial bot list
             $('#findBots').on('click', function(){sock.et.emit('botFind');}); // provide ability to refresh list
         }
@@ -143,7 +137,6 @@ var pages = {
             $(id).show().text(id+': available!');         // button text: show availbility
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
-            // control.revoke(bot.id);                     // offline for master? remove control
             $(id).off();                                   // remove control click event for temp
             if(pages.userType = 'admin'){                  // if admin
                 $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
