@@ -123,14 +123,13 @@ var pages = {
             $('#findBots').on('click', function(){sock.et.emit('botFind');}); // provide ability to refresh list
         }
     },
-    list: function(bot){           // adds bot status to a list of buttons when they call us
-        var index = pages.bots.indexOf(bot.id);
-        var id = 0;
-        if(index === -1){            // given no bot of this id exist yet add one
-            pages.bots.push(bot.id); // add new bot to personal list of bots
-            index = pages.bots.indexOf(bot.id); // find index of new bot in list
-            id = 'bot' + index;                 // create bot id based on list number
-            console.log('creating button?');
+    list: function(bot){                                  // makes bot button list as they call us
+        var index = pages.bots.indexOf(bot.id);           // see if we have a button for this bot
+        var id = 0;                                       // denotes id of bot to this user
+        if(index === -1){                                 // given no bot of this id exist yet add one
+            pages.bots.push(bot.id);                      // add new bot to personal list of bots
+            index = pages.bots.indexOf(bot.id);           // find index of new bot in list
+            id = 'bot' + index;                           // create bot id based on list number
             var button = $('<button/>').attr({            // create a new button element with attributes
                 id: id,                                   // attach id of button EG bot0, bot1
                 class: "btn btn-lg btn-success"           // bootstrap classes for looks sake
@@ -139,7 +138,7 @@ var pages = {
         }
         id = '#bot' + index;
         if(bot.status === 'open'){                        // case robot is free to be controled
-            $(id).text(id+': available!');             // button text: show availbility
+            $(id).text(id+': available!');                // button text: show availbility
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
             control.remove(bot.id);                        // offline for master? remove control

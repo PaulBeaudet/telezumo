@@ -12,11 +12,11 @@ var sock = {
                 if(nfo.id){sock.ets.to(nfo.id).emit('here', {id:socket.id, status: nfo.status});}
                 else{socket.broadcast('here', {id:socket.id, status: nfo.status});}
             }); // show available
-            socket.on('own', function(bot){sock.ets.to(bot, socket.id);});           // take control of a bot
-            socket.on('data', function(data){socket.broadcast.emit('data', data);}); // relay sensor data
-            socket.on('remote', function(data){sock.ets.emit('remote', data);});     // relay control data
-            socket.on('sdp', function(info){socket.broadcast.emit('sdp', info);});   // relay video type
-            socket.on('ice', function(info){socket.broadcast.emit('ice', info);});   // relay ip address
+            socket.on('own', function(bot){sock.ets.to(bot).emit('own', socket.id);});           // take control of a bot
+            socket.on('data', function(data){sock.ets.to(data.to).emit('data', data.data);});    // relay sensor data
+            socket.on('remote', function(data){sock.ets.to(data.id).emit('remote', data.cmd);}); // relay control data
+            socket.on('sdp', function(data){sock.ets.to(data.to).emit('sdp', data.data);});      // relay video type
+            socket.on('ice', function(data){sock.ets.to(data.to).emit('ice', data.data);});      // relay ip address
             socket.on('disconnect', function(){
                 if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
             });
