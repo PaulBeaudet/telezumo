@@ -130,7 +130,8 @@ var pages = {
             pages.bots.push(bot.id); // add new bot to personal list of bots
             index = pages.bots.indexOf(bot.id); // find index of new bot in list
             id = 'bot' + index;                 // create bot id based on list number
-            $('#bots').append('<li><button id='+id+' class="btn btn-lg btn-success></button></li>');
+            console.log('creating button?');
+            $('ul #bots').append('<li><button id='+id+' class="btn btn-lg btn-success></button></li>');
         } else {id = 'bot' + index;}                                    // already have a button for this bot
         if(bot.status === 'open'){                                      // case robot is free to be controled
             $(id).text(id+':bot available!');                           // button text: show availbility
