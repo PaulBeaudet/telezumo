@@ -18,7 +18,7 @@ var sock = {
             socket.on('sdp', function(data){sock.ets.to(data.to).emit('sdp', data.data);});      // relay video type
             socket.on('ice', function(data){sock.ets.to(data.to).emit('ice', data.data);});      // relay ip address
             socket.on('disconnect', function(){
-                if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
+                // if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
             });
         });
     }

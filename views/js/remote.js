@@ -132,16 +132,16 @@ var pages = {
             id = 'bot' + index;                           // create bot id based on list number
             var button = $('<button/>').attr({            // create a new button element with attributes
                 id: id,                                   // attach id of button EG bot0, bot1
-                class: "btn btn-lg btn-success"           // bootstrap classes for looks sake
+                class: "btn btn-md btn-success"           // bootstrap classes for looks sake
             });
             $('#bots').append(button);                    // attach button to page
         }
         id = '#bot' + index;
         if(bot.status === 'open'){                        // case robot is free to be controled
-            $(id).text(id+': available!');                // button text: show availbility
+            $(id).show().text(id+': available!');         // button text: show availbility
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
-            control.remove(bot.id);                        // offline for master? remove control
+            // control.remove(bot.id);                     // offline for master? remove control
             $(id).off();                                   // remove control click event for temp
             if(pages.userType = 'admin'){                  // if admin
                 $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
