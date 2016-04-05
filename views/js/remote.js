@@ -4,7 +4,7 @@ var control = {
     bot: null,
     init: function(id){                                   // pass id of the bot you desire to control
         control.bot = id;
-        if(pages.userType === 'temp'){$('.view').hide();} // hide find bots if this is a temp user
+        if(pages.userType === 'temp'){$('.view.find').hide();} // hide find bots if this is a temp user
         $('.tele.view').show();                           // show telepresence view
         sock.et.emit('own', control.bot);                 // send control command to bot
         video.init();                                     // try to get user media and start video telepresence
