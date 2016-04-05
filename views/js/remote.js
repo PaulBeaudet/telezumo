@@ -7,7 +7,6 @@ var control = {
         if(pages.userType === 'temp'){$('.view.find').hide();} // hide find bots if this is a temp user
         $('.tele.view').show();                           // show telepresence view
         sock.et.emit('own', control.bot);                 // send control command to bot
-        video.init();                                     // try to get user media and start video telepresence
         $('#rvsLeft').on('mousedown touchstart', function(){sock.send('remote', 'M1');});
         $('#down').on('mousedown touchstart', function(){sock.send('remote', 'M2');});
         $('#rvsRight').on('mousedown touchstart', function(){sock.send('remote', 'M3');});
@@ -23,7 +22,6 @@ var control = {
         $('#speed2').on('click', function(){sock.send('remote', 'S2');});
         $('#speed3').on('click', function(){sock.send('remote', 'S3');});
         $('#speed4').on('click', function(){sock.send('remote', 'S4');});
-        $('#videoBTN').on('click', function(){signal.peerConnect(true);});
         $('#disconnect').on('click touchstart', control.disconnect);
     },
     revoke: function(id){          // externally driven disconnect event
@@ -115,6 +113,7 @@ var pages = {
             $('.login.view').show();
         } else {
             sock.control();                                                   // create socket on listen events
+            video.init();                                                     // potentially get video stream
             $('.find.view').show();                                           // show bot list view
             sock.et.emit('botFind');                                          // call for intial bot list
             $('#findBots').on('click', function(){sock.et.emit('botFind');}); // provide ability to refresh list
