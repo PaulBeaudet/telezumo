@@ -36,7 +36,7 @@ var sock = {
 }
 
 var routes = {
-    slash: function(req, res){res.render('remote', {csrfToken: req.csrfToken(), auth: 'false'});},
+    admin: function(req, res){res.render('remote', {csrfToken: req.csrfToken(), auth: 'false'});},
     signin: function(req, res){
         if(req.body.name === process.env.NAME && req.body.password === process.env.PASSWORD){
             res.render('remote', {csrfToken: req.csrfToken(), auth: 'admin'});
@@ -74,9 +74,9 @@ var serve = {
         app.use(require('csurf')());                         // Cross site request forgery tokens
         app.use(serve.express.static(__dirname + '/views')); // serve page dependancies (sockets, jquery, bootstrap)
         var router = serve.express.Router();                 // create express router object to add routing events to
-        router.get('/', routes.slash);                       // main route for getting in
-        router.post('/', routes.signin);                     // authenticate admin
-        router.get('/control', routes.control);              // allow people to control the zumo
+        router.get('/admin', routes.admin);                  // main route for getting in
+        router.post('/admin', routes.signin);                // authenticate admin
+        router.get('/', routes.control);                     // allow people to control the zumo
         app.use(router);                                     // get express to user the routes we set
         sock.listen(http);                                   // listen for socket connections
         http.listen(process.env.PORT);                       // listen on specified PORT enviornment variable
