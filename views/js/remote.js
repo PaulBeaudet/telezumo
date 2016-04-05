@@ -51,8 +51,8 @@ var signal = {
         signal.peer.onicecandidate = function (event) { // on address info being introspected from external "stun" server
             if (event.candidate != null) { sock.send('ice', JSON.stringify(event.candidate)); }
         }; // null === finished finding info to describe ones own address, ie "canidate" address paths
-        signal.peer.onaddstream = video.remoteStream;  // display remote video stream when it comes in
-        signal.peer.addStream(video.stream);           // make our video stream sharable
+        signal.peer.onaddstream = video.remoteStream;          // display remote video stream when it comes in
+        if(video.stream){signal.peer.addStream(video.stream);} // make our video stream sharable
         if(amIfirst){ signal.peer.createOffer(signal.onSession, utils.error);}
     },
     recepient: function(info, type){
