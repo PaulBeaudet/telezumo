@@ -5,20 +5,31 @@ var sock = {
     listen: function(server){
         sock.ets = sock.ets(server);
         sock.ets.on('connection', function(socket){
-            var bot = false; // is this a bot or a controlor?
+            var bot = false;         // is this a bot or a controlor?
+            var masterOfBot = false; // is this a master of a bot
             socket.on('botFind', function(){socket.broadcast.emit('botFind', socket.id);});// broadcast to available bots
             socket.on('here', function(nfo){
                 bot = true; // only bots say 'here'
                 if(nfo.id){sock.ets.to(nfo.id).emit('here', {id:socket.id, status: nfo.status});}
-                else{socket.broadcast('here', {id:socket.id, status: nfo.status});}
+                else{socket.broadcast.emit('here', {id:socket.id, status: nfo.status});}
             }); // show available
-            socket.on('own', function(bot){sock.ets.to(bot).emit('own', socket.id);});            // take control of a bot
+            socket.on('own', function(bot){
+                masterOfBot = bot;                       // hold which bot we are controling in closure
+                sock.ets.to(bot).emit('own', socket.id); // tell that bot we are controling her/him
+            });
             socket.on('data', function(data){sock.ets.to(data.to).emit('data', data.data);});     // relay sensor data
             socket.on('remote', function(data){sock.ets.to(data.to).emit('remote', data.data);}); // relay control data
             socket.on('sdp', function(data){sock.ets.to(data.to).emit('sdp', data.data);});       // relay video type
             socket.on('ice', function(data){sock.ets.to(data.to).emit('ice', data.data);});       // relay ip address
+            socket.on('relinquish', function(){ // tell bot when controler is done controling
+                if(masterOfBot){
+                    sock.ets.to(masterOfBot).emit('relinquish', socket.id); // inform bot of disownment
+                    masterOfBot = false;                                    // this socket now masters no bot
+                }
+            });
             socket.on('disconnect', function(){
                 if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
+                if(masterOfBot){sock.ets.to(masterOfBot).emit('relinquish', socket.id);}
             });
         });
     }

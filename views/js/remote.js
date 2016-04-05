@@ -24,15 +24,16 @@ var control = {
         $('#speed3').on('click', function(){sock.send('remote', 'S3');});
         $('#speed4').on('click', function(){sock.send('remote', 'S4');});
         $('#videoBTN').on('click', function(){signal.peerConnect(true);});
-        $('#disconnect').on('click', control.disconnect);
+        $('#disconnect').on('click touchstart', control.disconnect);
     },
     revoke: function(id){          // externally driven disconnect event
         if(id === control.bot){control.disconnect();}
     },
     disconnect: function(){
-        control.bot = null;        // remove the id
-        $('.tele.view').hide();    // hide controlor view
-        $('.find.view').show();    // show the ability to find more bots
+        control.bot = null;         // remove the id
+        $('.tele.view').hide();     // hide controlor view
+        $('.find.view').show();     // show the ability to find more bots
+        sock.et.emit('relinquish'); // signal relinquished control of bot
     }
 }
 
@@ -100,8 +101,8 @@ var sock = {
         sock.et.on('sdp', function(info){signal.recepient(info, 'sdp');}); // get audeo video info
         sock.et.on('here', pages.list);                                    // list available bots when they call
     },
-    send: function(type, nfo){
-        if(control.bot){sock.et.emit(type, {to:control.bot, data:nfo});}
+    send: function(type, data){
+        if(control.bot){sock.et.emit(type, {to:control.bot, data:data});}
     }
 }
 
