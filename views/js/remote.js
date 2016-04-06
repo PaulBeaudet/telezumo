@@ -142,6 +142,8 @@ var pages = {
                 $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
             }
             $(id).text(id+':in use');                      // either case show robots in use
+        } else if (bot.status === 'down'){                 // case the bot is without capability
+            $(id).off().text(id +': inoperrable');         // show bot is not able to be controled
         } else if(bot.status === 'offline'){               // case robot has disconnected
             control.revoke(bot.id);                        // offline for master? remove control
             pages.bots.splice(index, 1);                   // remove this bot from our list of bots
