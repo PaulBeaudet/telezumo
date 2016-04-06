@@ -112,11 +112,10 @@ var pages = {
         if(pages.userType === 'false'){
             $('.login.view').show();
         } else {
-            sock.control();                                                   // create socket on listen events
-            video.init();                                                     // potentially get video stream
-            $('.find.view').show();                                           // show bot list view
-            sock.et.emit('botFind');                                          // call for intial bot list
-            $('#findBots').on('click', function(){sock.et.emit('botFind');}); // provide ability to refresh list
+            sock.control();                               // create socket on listen events
+            video.init();                                 // potentially get video stream
+            $('.find.view').show();                       // show bot list view
+            sock.et.emit('botFind');                      // call for intial bot list
         }
     },
     list: function(bot){                                  // makes bot button list as they call us
