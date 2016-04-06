@@ -138,7 +138,7 @@ var pages = {
             $(id).off().on('click', function(){control.init(bot.id);}); // control the bot on click
         } else if(bot.status === 'taken') {
             $(id).off();                                   // remove control click event for temp
-            if(pages.userType = 'admin'){                  // if admin
+            if(pages.userType === 'admin'){                // if admin
                 $(id).on('click', function(){control.init(bot.id);}); // can control bot even when taken
             }
             $(id).text(id+':in use');                      // either case show robots in use
