@@ -22,6 +22,7 @@ var control = {
         $('#speed2').on('click', function(){sock.send('remote', 'S2');});
         $('#speed3').on('click', function(){sock.send('remote', 'S3');});
         $('#speed4').on('click', function(){sock.send('remote', 'S4');});
+        $('#horn').on('click', function(){sock.send('remote', 'C1');});
         $('#disconnect').on('click touchstart', control.disconnect);
     },
     revoke: function(id){          // externally driven disconnect event
