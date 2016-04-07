@@ -8,9 +8,7 @@ ul {
   word-wrap: break-word;
 }
 
-.booth{
-    width:400px;
-    background: #ccc;
-    border: solid 10px #ddd;
-    margin:0 auto;
+video {
+  width: 100%    !important;
+  height: auto   !important;
 }
