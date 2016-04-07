@@ -32,6 +32,7 @@ var control = {
         control.bot = null;         // remove the id
         $('.tele.view').hide();     // hide controlor view
         $('.find.view').show();     // show the ability to find more bots
+        signal.disconnect();        // disconnect webRTC/video signal
         sock.et.emit('relinquish'); // signal relinquished control of bot
     }
 }
@@ -69,6 +70,10 @@ var signal = {
             sock.send('sdp', JSON.stringify(signal.peer.localDescription)); // send discription of connection type
         }, utils.error);
     },
+    disconnect: function(){
+        signal.peer.close(); // close peer connection
+        signal.peer = null;  // set connection back to null in prep for a new one 
+    }
 }
 
 var video = {
