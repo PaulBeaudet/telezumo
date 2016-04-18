@@ -94,13 +94,28 @@ var utils = {
     error: function(err){
         console.log(err);
         $('#err').text('error:' + err);
+    },
+    dataDisplay: function(info){
+        if(info[0] === '$'){
+            var type = info[1];                 // grab type of data this is to know where to display it
+            info.splice(0, 2);                  // splice first two chars
+            if(type === 'C'){                   // compass case
+                $('#compass').text(info);
+            } else if (type === 'A'){           // accelerometer case
+                $('#accelerometer').text(info);
+            } else if (type === 'R'){           // reflectence case
+                $('#reflectence').text(info);
+            }
+        } else {                                // in all other cases print text to serial element
+            $('#serial').text(info.data);
+        }
     }
 }
 
 var sock = {
     et: io(),
     control: function(){
-        sock.et.on('data', function(info){$('#sensors').text(info);});
+        sock.et.on('data', utils.dataDisplay);
         sock.et.on('ice', function(info){signal.recepient(info, 'ice');}); // get ip info
         sock.et.on('sdp', function(info){signal.recepient(info, 'sdp');}); // get audeo video info
         sock.et.on('here', pages.list);                                    // list available bots when they call
