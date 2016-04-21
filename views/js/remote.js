@@ -72,7 +72,7 @@ var signal = {
     },
     disconnect: function(){
         signal.peer.close(); // close peer connection
-        signal.peer = null;  // set connection back to null in prep for a new one 
+        signal.peer = null;  // set connection back to null in prep for a new one
     }
 }
 
@@ -96,18 +96,18 @@ var utils = {
         $('#err').text('error:' + err);
     },
     dataDisplay: function(info){
-        if(info[0] === '$'){
-            var type = info[1];                 // grab type of data this is to know where to display it
-            info.splice(0, 2);                  // splice first two chars
+        if(info.substring(1, 2) === '$'){
+            var type = info.substring(2, 3);    // grab type of data this is to know where to display it
+            var data  = info.substring(3);      // get rest of string
             if(type === 'C'){                   // compass case
-                $('#compass').text(info);
+                $('#compass').html(data);
             } else if (type === 'A'){           // accelerometer case
-                $('#accelerometer').text(info);
+                $('#accelerometer').html(data);
             } else if (type === 'R'){           // reflectence case
-                $('#reflectence').text(info);
+                $('#reflectence').html(data);
             }
         } else {                                // in all other cases print text to serial element
-            $('#serial').text(info.data);
+            $('#serial').html(info);
         }
     }
 }
