@@ -18,6 +18,8 @@ block content
             li.view.tele
                 .row
                     video#remoteVid(autoplay)
+                #baseInterupt.row.text-center.view
+                    p hold on, base disconnected
                 #top.row.text-center
                     button#fwdLeft.up.btn.btn-lg.btn-success.pull-left <@
                     button#up.btn.btn-lg.btn-success ^
@@ -57,9 +59,13 @@ block content
                         span#accelerometer ???
                     .col-xs-6
                         span#reflectence ???
+            li.view.pair
+                .row
+
             li.view.find
                 .row
                     p Welcome to telezumo mission control. When there are bots to potentially control they will be shown below. "In use", means that someone is using that bot at the moment, please be patient. If no bots show, contact your telezumo adminstrator for assistance
+                    p.pair.view with which body would you like to pair?
                 #bots
             li.view.login
                 #signup.jumbotron

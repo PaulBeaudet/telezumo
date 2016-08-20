@@ -7,14 +7,16 @@ var sock = {
         sock.ets.on('connection', function(socket){
             var bot = false;         // is this a bot or a controlor?
             var masterOfBot = false; // is this a master of a bot
+            var brain = false;       // is there a brain to master as well (bots can have body and head nodes)
             socket.on('botFind', function(){socket.broadcast.emit('botFind', socket.id);});// broadcast to available bots
             socket.on('here', function(nfo){
                 bot = true; // only bots say 'here'
-                if(nfo.id){sock.ets.to(nfo.id).emit('here', {id:socket.id, status: nfo.status});}
-                else{socket.broadcast.emit('here', {id:socket.id, status: nfo.status});}
+                if(nfo.id){sock.ets.to(nfo.id).emit('here', {id:socket.id, status: nfo.status, type: nfo.type});}
+                else{socket.broadcast.emit('here', {id:socket.id, status: nfo.status, type: nfo.type});}
             }); // show available
             socket.on('own', function(bot){
-                masterOfBot = bot;                       // hold which bot we are controling in closure
+                if(masterOfBot){ brain = bot; }          // add a brain if base master already exist
+                else { masterOfBot = bot; }              // hold which bot we are controling in closure
                 sock.ets.to(bot).emit('own', socket.id); // tell that bot we are controling her/him
             });
             socket.on('data', function(data){sock.ets.to(data.to).emit('data', data.data);});     // relay sensor data
@@ -26,10 +28,15 @@ var sock = {
                     sock.ets.to(masterOfBot).emit('relinquish', socket.id); // inform bot of disownment
                     masterOfBot = false;                                    // this socket now masters no bot
                 }
+                if(brain){                                                  // if brains need to be relinqueshed as well
+                    sock.ets.to(brain).emit('relinquish', socket.id);       // inform bot of disownment
+                    brain = false;                                          // this socket now masters no bot
+                }
             });
             socket.on('disconnect', function(){
                 if(bot){socket.broadcast.emit('here', {id:socket.id, status: 'offline'});}
                 if(masterOfBot){sock.ets.to(masterOfBot).emit('relinquish', socket.id);}
+                if(brain){sock.ets.to(brain).emit('relinquish', socket.id);} // RELINQUISH THE BRAIN!!
             });
         });
     }
