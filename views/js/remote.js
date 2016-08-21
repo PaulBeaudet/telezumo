@@ -4,10 +4,10 @@ var control = {
     brain: null,
     bot: null,
     baseID: null,
-    init: function(botID, type, brainID){                      // pass id of the bot you desire to control
+    init: function(botID, botType, brainID){                      // pass id of the bot you desire to control
         control.bot = botID;
-        if(type){                                              // if this bot has a two parts
-            control.baseID = type;                             // hold id of base in case is disconnects on us
+        if(botType){                                              // if this bot has a two parts
+            control.baseID = botType;                             // hold id of base in case is disconnects on us
             if(brainID){
                 control.brain = brainID;
                 sock.et.emit('own', control.brain);            // send control command to bot
@@ -34,8 +34,8 @@ var control = {
         $('#horn'  ).on('click', function(){control.send('remote', 'C1');});
         $('#disconnect').on('click touchstart', control.disconnect);
     },
-    revoke: function(id, type){
-        if(type === 'phone'){
+    revoke: function(id, botType){
+        if(botType === 'phone'){
             if(id === control.bot || id === control.brain){control.disconnect();}
         } else {
             $('#baseInterupt').show();  // show base disconnected (may reconnect)
@@ -57,9 +57,13 @@ var control = {
         }
     },
     send: function(type, data){
-        if(control.brian && type !== 'remote'){ // if there is a brain relay everything to brain accept remote
-            sock.et.emit(type, {to:control.brain, data:data});
-        } else if (control.bot) {               // other wise just make sure we have a bot to relay to and send it over
+        if(control.brain){          // if there is a brain relay everything to brain accept remote
+            if(type === 'remote'){  // remote commands are directed to base
+                sock.et.emit(type, {to:control.bot, data:data});
+            } else {                // all others go to phone
+                sock.et.emit(type, {to:control.brain, data:data});
+            }
+        } else {                    // other wise just make sure we have a bot to relay to and send it over
             sock.et.emit(type, {to:control.bot, data:data});
         }
     }
@@ -213,7 +217,9 @@ var pages = {
             if(pages.botTypes[i] === "phone"){
                 $('#' + i ).removeClass('btn-success').addClass('btn-danger').off();
             } else {
-                $('#' + i ).off().on('click', function(){control.init(pages.bots[i], pages.botTypes[i], brainID);});
+                var botType = pages.botTypes[i];
+                var controlBot = pages.bots[i];
+                $('#' + i ).off().on('click', function(){ control.init(controlBot, botType, brainID);});
             }
         }
     }
