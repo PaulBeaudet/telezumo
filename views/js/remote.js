@@ -32,6 +32,12 @@ var control = {
         $('#speed3').on('click', function(){control.send('remote', 'S3');});
         $('#speed4').on('click', function(){control.send('remote', 'S4');});
         $('#horn'  ).on('click', function(){control.send('remote', 'C1');});
+        $('#offsetSubmit').on('click', function(){
+            var offset = String.fromCharCode($(#offsetValue).val());
+            var command = 'O' + offset;
+            console.log('sending command:' + command);
+            control.send('remote', command);
+        });
         $('#disconnect').on('click touchstart', control.disconnect);
     },
     revoke: function(id, type){

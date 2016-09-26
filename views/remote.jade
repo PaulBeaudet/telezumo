@@ -40,6 +40,11 @@ block content
                     button#speed3.speed.btn.btn-lg.btn-info 3
                     button#speed4.speed.btn.btn-lg.btn-info 4
                     button#disconnect.btn.btn-lg.btn-danger disconnect
+                .row.text-center
+                    .col-xs-12
+                        span Offset Value (neg right / pos left)
+                        input#offsetValue(type='number', min='-100', max='100')
+                        button#offsetSubmit.btn.btn-md.btn-info correct
                 #infoBar.row.text-center
                     .col-xs-6
                         span#serial
